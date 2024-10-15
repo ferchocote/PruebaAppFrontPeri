@@ -1,4 +1,4 @@
-<p-button label="Agregar" />
+<!-- <p-button label="Agregar" /> -->
 <div class="card">
   <p-table
       #dt1
@@ -8,7 +8,7 @@
       [rowsPerPageOptions]="[10, 25, 50]"
       [loading]="loading"
       [paginator]="true"
-      [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+      [globalFilterFields]="['codeDto', 'descriptionDto', 'addressDto', 'currencyDescriptionDto']"
       >
       <ng-template pTemplate="caption">
           <div class="flex">
