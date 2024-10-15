@@ -1,16 +1,16 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Table, TableModule } from 'primeng/table';
+import { Table } from 'primeng/table';
 import { BranchService } from './services/branch.service';
-import { Customer, Representative } from './models/branch/branch.model';
+import { Branch, Customer, Representative } from './models/branch/branch.model';
 import { HttpClientModule } from '@angular/common/http';
 import { ImportsModule } from './imports';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HttpClientModule, CommonModule, ImportsModule],
+  imports: [RouterOutlet, HttpClientModule, ImportsModule, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: [ BranchService ]
@@ -18,6 +18,8 @@ import { ImportsModule } from './imports';
 export class AppComponent implements OnInit {
   title = 'test-branch';
   customers!: Customer[];
+
+  branches!: Branch[];
 
   representatives!: Representative[];
 
@@ -32,12 +34,16 @@ export class AppComponent implements OnInit {
   constructor(private branchService: BranchService) {}
 
   ngOnInit() {
-      this.branchService.getCustomersLarge().then((customers) => {
-          this.customers = customers;
-          this.loading = false;
-
-          this.customers.forEach((customer) => (customer.date = new Date(<Date>customer.date)));
-      });
+    this.branchService.GetBranches().subscribe({
+      next: (branches) => {
+          this.branches = branches; // Asigna las ramas obtenidas
+          this.loading = false; // Cambia el estado de carga
+      },
+      error: (error) => {
+          console.error('Error al obtener ramas:', error);
+          this.loading = false; // Cambia el estado de carga incluso si hay un error
+      }
+  });
 
       this.representatives = [
           { name: 'Amy Elsner', image: 'amyelsner.png' },
@@ -50,15 +56,6 @@ export class AppComponent implements OnInit {
           { name: 'Onyama Limba', image: 'onyamalimba.png' },
           { name: 'Stephen Shaw', image: 'stephenshaw.png' },
           { name: 'Xuxue Feng', image: 'xuxuefeng.png' }
-      ];
-
-      this.statuses = [
-          { label: 'Unqualified', value: 'unqualified' },
-          { label: 'Qualified', value: 'qualified' },
-          { label: 'New', value: 'new' },
-          { label: 'Negotiation', value: 'negotiation' },
-          { label: 'Renewal', value: 'renewal' },
-          { label: 'Proposal', value: 'proposal' }
       ];
   }
 

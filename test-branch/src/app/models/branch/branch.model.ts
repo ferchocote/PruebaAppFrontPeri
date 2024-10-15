@@ -21,3 +21,15 @@ export interface Customer {
     verified?: boolean;
     balance?: number;
 }
+
+export interface Branch {
+    idDto?: string;
+    codeDto?: number;
+    descriptionDto?: string;
+    company?: string;
+    addressDto?: string;
+    identificationDto?: string;
+    creationDateDto?: Date;
+    idCurrencyDto?: string;
+    currencyDescriptionDto?: string;
+}

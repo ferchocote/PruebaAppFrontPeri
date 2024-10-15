@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { RequestResult } from '../models/service/requestResult';
+import { Branch } from '../models/branch/branch.model';
+import { catchError, map, Observable, retry } from 'rxjs';
+import { ResolveRequestResultService } from '../utils/resolve-requestResult';
 
 @Injectable()
 export class BranchService {
@@ -9008,7 +9012,8 @@ export class BranchService {
         ];
     }
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient,
+        private readonly resolveReqSvc: ResolveRequestResultService) {}
     
     getCustomersMini() {
         return Promise.resolve(this.getData().slice(0, 5));
@@ -9032,5 +9037,16 @@ export class BranchService {
 
     getCustomers(params?: any) {
         return this.http.get<any>('https://www.primefaces.org/data/customers', { params: params }).toPromise();
+    }
+
+    GetBranches(): Observable<Branch[]> {
+        return this.http.get<RequestResult<Branch[]>>(`https://localhost:7145/Api/Branch/GetBranches`).pipe(
+          retry(0),
+          catchError(this.resolveReqSvc.handleError),
+          map((vars: RequestResult<Branch[] | []>) =>{
+            const result = this.resolveReqSvc.resolve<Branch[]>(vars);
+            return result || [];
+          })
+        );
     }
 };
