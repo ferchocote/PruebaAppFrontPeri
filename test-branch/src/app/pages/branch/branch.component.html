@@ -1,0 +1,86 @@
+<div class="card">
+    <p-table
+        #dt1
+        [value]="branches"
+        dataKey="id"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [loading]="loading"
+        [paginator]="true"
+        [globalFilterFields]="['codeDto', 'descriptionDto', 'addressDto', 'currencyDescriptionDto']"
+        >
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (onClick)="clear(dt1)" />
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt1.filterGlobal(handleInput($event), 'contains')" placeholder="Search keyword" />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="min-width:15rem">
+                    <div class="flex align-items-center">
+                        Codigo
+                        <p-columnFilter type="text" field="codeDto" display="menu" />
+                    </div>
+                </th>
+                <th style="min-width:15rem">
+                    <div class="flex align-items-center">
+                        Descripción
+                        <p-columnFilter type="text" field="descriptionDto" display="menu" />
+                    </div>
+                </th>
+                <th style="min-width:15rem">
+                  <div class="flex align-items-center">
+                    Descripción
+                    <p-columnFilter type="text" field="addressDto" display="menu" />
+                  </div>
+                </th>
+                <th style="min-width:10rem">
+                    <div class="flex align-items-center">
+                        Fecha Creación
+                        <p-columnFilter type="date" field="creationDateDto" display="menu" />
+                    </div>
+                </th>
+                <th style="min-width:10rem">
+                    <div class="flex align-items-center">
+                        Moneda
+                        <p-columnFilter type="text" field="currencyDescriptionDto" display="menu" />
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-Branch>
+            <tr>
+                <td>
+                    {{ Branch.codeDto }}
+                </td>
+                <td>
+                    <span class="ml-1 vertical-align-middle">{{ Branch.descriptionDto }}</span>
+                </td>
+                <td>
+                    <span class="ml-1 vertical-align-middle">{{ Branch.addressDto }}</span>
+                </td>
+                <td>
+                    {{ Branch.creationDateDto | date: 'MM/dd/yyyy' }}
+                </td>
+                <td>
+                    {{ Branch.currencyDescriptionDto }}
+                </td>
+                <td><p-button type="button" icon="pi pi-trash" severity="danger" (onClick)="confirm1($event, Branch.idDto)"/></td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">No se encontraron sucursales.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+  </div>
+
+  <div class="card flex justify-content-center gap-2">
+    <p-toast />
+    <p-confirmDialog />
+</div>
