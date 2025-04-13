@@ -1,0 +1,27 @@
+<div class="container">
+    <input [(ngModel)]="filterText" placeholder="Filtrar por nombre" class="filter-input" />
+  
+    <table *ngIf="users$ | async as users" class="user-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Teléfono</th>
+          <th>Sitio Web</th>
+          <th>Dirección</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users | userFilter: filterText">
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.phone }}</td>
+          <td><a [href]="user.website" target="_blank">Visitar</a></td>
+          <td>{{ user.address?.street }}, {{ user.address?.city }} - {{ user.address?.zipcode }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  
+  
